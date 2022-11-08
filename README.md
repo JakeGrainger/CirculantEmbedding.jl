@@ -6,6 +6,7 @@
 [![Coverage](https://codecov.io/gh/JakeGrainger/CirculantEmbedding.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/JakeGrainger/CirculantEmbedding.jl)
 
 - Julia implementation of the circulant embedding algorithm proposed by Chan and Wood (1999).
+- WARNING: THIS IS EXPERIMENTAL
 
 ## References
 Chan, G., & Wood, A. T. (1999). Simulation of stationary Gaussian vector fields. Statistics and computing, 9(4), 265-268.

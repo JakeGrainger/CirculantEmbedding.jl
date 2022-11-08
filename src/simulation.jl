@@ -34,9 +34,7 @@ end
 
 function simulate(gp::GaussianProcess{D,P,T,CartesianGrid{D,T},S}) where {D,P,T,S}
     for i in eachindex(gp.sim_prealloc.L,gp.sim_prealloc.Y)
-        Z1 = @SVector randn(P)
-        Z2 = @SVector randn(P)
-        Z = (Z1 + 1im*Z2)/2
+        Z = SVector{P,complex(T)}(complex(rand(Normal(0,1)), rand(Normal(0,1))) for i in 1:P)
         gp.sim_prealloc.Y[i] = gp.sim_prealloc.L[i].L * Z
     end
     W = fft_array(gp.sim_prealloc.Y) / sqrt(length(gp.sim_prealloc.Y))

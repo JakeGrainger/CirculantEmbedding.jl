@@ -32,7 +32,7 @@ function choose_circ_m(n::Int, pad)
     return 2n-2+pad
 end
 
-function simulate(gp::GaussianProcess{D,P,T,CartesianGrid{D,T},S}) where {D,P,T,S}
+function rand(gp::GaussianProcess{D,P,T,CartesianGrid{D,T},S}) where {D,P,T,S}
     for i in eachindex(gp.sim_prealloc.L,gp.sim_prealloc.Y)
         Z = SVector{P,complex(T)}(complex(rand(Normal(0,1)), rand(Normal(0,1))) for i in 1:P)
         gp.sim_prealloc.Y[i] = gp.sim_prealloc.L[i].L * Z

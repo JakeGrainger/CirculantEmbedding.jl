@@ -38,5 +38,5 @@ function rand(gp::GaussianProcess{D,P,T,CartesianGrid{D,T},S}) where {D,P,T,S}
         gp.sim_prealloc.Y[i] = gp.sim_prealloc.L[i].L * Z
     end
     W = fft_array(gp.sim_prealloc.Y) / sqrt(length(gp.sim_prealloc.Y))
-    return real.(W[CartesianIndices(size(gp.mesh))]), imag.(W[CartesianIndices(size(gp.mesh))])
+    return real.(W[CartesianIndices(size(gp.mesh))])#, imag.(W[CartesianIndices(size(gp.mesh))])
 end

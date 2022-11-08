@@ -13,12 +13,12 @@ struct Matern{D,P,T,L} <: Kernel{D,P}
 end
 
 
-function cov(Γ::Matern{D,1,T,L}, h) where {D,T,L}
+function Distributions.cov(Γ::Matern{D,1,T,L}, h) where {D,T,L}
     nh = norm(h)
     Γ.σ²[1,1] * materncorr(Γ.ν[1,1], Γ.a[1,1], nh)
 end
 
-function cov(Γ::Matern{D,P,T,L}, h) where {D,P,T,L}
+function Distributions.cov(Γ::Matern{D,P,T,L}, h) where {D,P,T,L}
     nh = norm(h)
     return SMatrix{P,P,T,P^2}(Γ.σ²[i,j] * materncorr(Γ.ν[i,j], Γ.a[i,j], nh) for i in 1:P, j in 1:P)
 end

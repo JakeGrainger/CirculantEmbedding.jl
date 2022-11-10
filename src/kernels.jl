@@ -24,7 +24,7 @@ function Distributions.cov(Γ::Matern{D,P,T,L}, h) where {D,P,T,L}
 end
 
 function materncorr(ν, a, nh)
-    nh < 1e-10 ? 1.0 : 2^(ν-1)/gamma(ν) * (a*nh)^ν * besselk(ν, nh)
+    nh < 1e-10 ? 1.0 : 2^(1-ν)/gamma(ν) * (a*nh)^ν * besselk(ν, a*nh)
 end
 
 function sdf(Γ::Matern{D,P,T,L}, w) where {D,P,T,L}

@@ -33,5 +33,5 @@ function sdf(Γ::Matern{D,P,T,L}, w) where {D,P,T,L}
 end
 
 function materncorr_ft(ν, a, nw, d)
-    2^2 * π^(d/2)   * gamma(ν+d/2)/gamma(ν) * a^(2ν) * (1/(a^2+4*π^2*nw^2))^(ν+d/2)
+    2^d * π^(d/2)   * gamma(ν+d/2)/gamma(ν) * a^(2ν) * (1/(a^2+4*π^2*nw^2))^(ν+d/2)
 end

@@ -1,4 +1,4 @@
-struct OscillatoryMatern{D,P,T,L}
+struct OscillatoryMatern{D,P,T,L} <: Kernel{D,P}
     matern::Matern{D,P,T,L}
     offset::SVector{D,T}
 end

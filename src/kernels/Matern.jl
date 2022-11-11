@@ -6,7 +6,7 @@ struct Matern{D,P,T,L} <: Kernel{D,P}
         new{D,P,T,L}(σ²,ν,a)
     end
     Matern(σ²,ν,a,D=1) = Matern(σ²,ν,a,Val{D}())
-    Matern(σ²::T,ν::T,a::T,::Val{D}) where {T,D} = SHermitianCompact(SMatrix{1,1,T,1}(σ²),SMatrix{1,1,T,1}(a),SMatrix{1,1,T,1}(ν),Val{D}())
+    Matern(σ²::T,ν::T,a::T,::Val{D}) where {T,D} = Matern(SHermitianCompact(SMatrix{1,1,T,1}(σ²)),SHermitianCompact(SMatrix{1,1,T,1}(a)),SHermitianCompact(SMatrix{1,1,T,1}(ν)),Val{D}())
 end
 
 function Distributions.cov(Γ::Matern{D,1,T,L}, h) where {D,T,L}

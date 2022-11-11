@@ -20,6 +20,14 @@ struct CirculantPrealloc{T,S,D}
         Y = Array{SVector{P,ComplexF64}}(undef, size(L))
         new{eltype(L), eltype(Y), D}(L,Y)
     end
+    function CirculantPrealloc(Γ::Kernel{D,1}, mesh::CartesianGrid{D,T}, pad=0) where {D,T}
+        lags = compute_lags(mesh, pad)
+        C = cov.(Γ, lags)
+        A = fft(C)
+        L = sqrt.(A)
+        Y = Array{ComplexF64}(undef, size(L))
+        new{eltype(L), eltype(Y), D}(L,Y)
+    end
 end
 
 function compute_lags(mesh::CartesianGrid{D,T}, pad) where {D,T}
@@ -36,6 +44,14 @@ function rand(gp::GaussianProcess{D,P,T,CartesianGrid{D,T},S}) where {D,P,T,S}
     for i in eachindex(gp.sim_prealloc.L,gp.sim_prealloc.Y)
         Z = SVector{P,complex(T)}(complex(rand(Normal(0,1)), rand(Normal(0,1))) for i in 1:P)
         gp.sim_prealloc.Y[i] = gp.sim_prealloc.L[i].L * Z
+    end
+    W = fft_array(gp.sim_prealloc.Y) / sqrt(length(gp.sim_prealloc.Y))
+    return real.(W[CartesianIndices(size(gp.mesh))])#, imag.(W[CartesianIndices(size(gp.mesh))])
+end
+function rand(gp::GaussianProcess{D,1,T,CartesianGrid{D,T},S}) where {D,T,S}
+    for i in eachindex(gp.sim_prealloc.L,gp.sim_prealloc.Y)
+        Z = complex(rand(Normal(0,1)), rand(Normal(0,1)))
+        gp.sim_prealloc.Y[i] = gp.sim_prealloc.L[i] * Z
     end
     W = fft_array(gp.sim_prealloc.Y) / sqrt(length(gp.sim_prealloc.Y))
     return real.(W[CartesianIndices(size(gp.mesh))])#, imag.(W[CartesianIndices(size(gp.mesh))])

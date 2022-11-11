@@ -7,5 +7,5 @@ module CirculantEmbedding
     include("simulation.jl")
     include("fft_array.jl")
 
-    export GaussianProcess, Matern
+    export GaussianProcess, Matern, OscillatoryMatern
 end

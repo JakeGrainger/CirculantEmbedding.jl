@@ -23,6 +23,11 @@ function materncorr(ν, a, nh)
     nh < 1e-10 ? 1.0 : 2^(1-ν)/gamma(ν) * (a*nh)^ν * besselk(ν, a*nh)
 end
 
+function sdf(Γ::Matern{D,1,T,L}, w) where {D,T,L}
+    nw = norm(w)
+    return Γ.σ²[1,1] * materncorr_ft(Γ.ν[1,1], Γ.a[1,1], nw, D)
+end
+
 function sdf(Γ::Matern{D,P,T,L}, w) where {D,P,T,L}
     nw = norm(w)
     return SMatrix{P,P,complex(T),P^2}(Γ.σ²[i,j] * materncorr_ft(Γ.ν[i,j], Γ.a[i,j], nw, D) for i in 1:P, j in 1:P)

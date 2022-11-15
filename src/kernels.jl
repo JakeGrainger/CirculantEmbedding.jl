@@ -1,6 +1,7 @@
 abstract type Kernel{D,P} end
 
 Base.broadcastable(k::Kernel) = Ref(k)
+Distributions.var(k::Kernel{D,P}) = cov(k, @SVector zeros(D))
 
 struct AdditiveKernel{D,P,K1<:Kernel{D,P},K2<:Kernel{D,P}} <: Kernel{D,P}
     k1::K1

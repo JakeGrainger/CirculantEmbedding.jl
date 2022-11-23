@@ -34,7 +34,7 @@ function cov_at_ft(Γ::Kernel, mesh, pad=0)
 end
 
 const KernelSomeSdfOnly = Union{KernelSdfOnly, AdditiveKernel{<:KernelSdfOnly,<:Kernel}, AdditiveKernel{<:Kernel, <:KernelSdfOnly}, AdditiveKernel{<:KernelSdfOnly, <:KernelSdfOnly}}
-function cov_at_ft(Γ::KernelSomeSdfOnly, mesh, pad)
+function cov_at_ft(Γ::Union{KernelSdfOnly, AdditiveKernel}, mesh, pad)
     lags = compute_lags(mesh, pad)
     return SHermitianCompact.(approx_cov(Γ, lags))
 end

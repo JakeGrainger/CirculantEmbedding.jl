@@ -14,8 +14,8 @@ sdf(k::AdditiveKernel, w) = sdf(k.k1, w) + sdf(k.k2, w)
 abstract type KernelSdfOnly{D,P} <: Kernel{D,P} end
 Distributions.cov(k::KernelSdfOnly, h) = error("Covariance not defined for $(typeof(k)). Can still be approximated, see approx_cov.")
 
-function aliased_sdf(Γ, k, Δ; K = 3)
-    return sum(sdf(Γ,k+j/Δ) for j in -K:K)
+function aliased_sdf(Γ::Kernel{D,P}, k, Δ; K = 3) where {D,P}
+    return sum(sdf(Γ,k .+ j.I ./ Δ) for j in CartesianIndices(ntuple(j->K, Val{D}())))
 end
 
 include("kernels/Matern.jl")

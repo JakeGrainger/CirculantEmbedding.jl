@@ -34,7 +34,8 @@ function cov_at_ft(Γ::Kernel, mesh, pad=0)
     return SHermitianCompact.(cov.(Γ, lags)) # strictly not symmetric, but doesn't change the algorithm as result of fft will be hermitian symm.
 end
 
-function cov_at_ft(Γ::KernelSdfOnly, mesh, pad)
+const KernelSomeSdfOnly = Union{KernelSdfOnly, AdditiveKernel{KernelSdfOnly,Kernel}, AdditiveKernel{Kernel, KernelSdfOnly}, AdditiveKernel{KernelSdfOnly, KernelSdfOnly}}
+function cov_at_ft(Γ::KernelSomeSdfOnly, mesh, pad)
     lags = compute_lags(mesh, pad)
     return SHermitianCompact.(approx_cov(Γ, lags))
 end

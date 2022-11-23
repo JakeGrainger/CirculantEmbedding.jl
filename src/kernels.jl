@@ -20,3 +20,4 @@ end
 
 include("kernels/Matern.jl")
 include("kernels/OscillatoryMatern.jl")
+include("kernels/IsotropicOscillatoryMatern.jl")

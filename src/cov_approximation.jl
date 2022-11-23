@@ -1,7 +1,7 @@
 function approx_cov(Γ::Kernel{D,P}, lags) where {D,P}
     nfreq = choose_nfreq.(lags.iterators)
     Δ = step.(lags.iterators)
-    n = length.(lags.iterators)
+    n = length.(lags.iterators) .÷ 2
     freq = fftfreq.(nfreq, 1.0./Δ)
 
     f = aliased_sdf.(Γ, Iterators.product(freq...), Ref(Δ))

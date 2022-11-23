@@ -13,7 +13,7 @@ struct CirculantPrealloc{T,S,D}
     L::Array{T,D}
     Y::Array{S,D}
     function CirculantPrealloc(Γ::Kernel{D,P}, mesh::CartesianGrid{D,T}, pad=0) where {D,P,T}
-        C = cov_at_ft(Γ, mesh, pad)
+        C = SHermitianCompact.(cov_at_ft(Γ, mesh, pad)) # strictly not symmetric, but doesn't change the algorithm as result of fft will be hermitian symm.
         A = fft_array(C)
         L = cholesky.(A)
         Y = Array{SVector{P,ComplexF64}}(undef, size(L))
@@ -28,15 +28,17 @@ struct CirculantPrealloc{T,S,D}
     end
 end
 
-function cov_at_ft(Γ::Kernel, mesh, pad=0)
+function cov_at_ft(Γ::Kernel, mesh, pad=0) where {D}
     lags = compute_lags(mesh, pad)
-    return SHermitianCompact.(cov.(Γ, lags)) # strictly not symmetric, but doesn't change the algorithm as result of fft will be hermitian symm.
+    return multi_cov(Γ, lags)
 end
 
 const KernelSomeSdfOnly = Union{KernelSdfOnly, AdditiveKernel{<:KernelSdfOnly,<:Kernel}, AdditiveKernel{<:Kernel, <:KernelSdfOnly}, AdditiveKernel{<:KernelSdfOnly, <:KernelSdfOnly}}
-function cov_at_ft(Γ::Union{KernelSdfOnly, AdditiveKernel}, mesh, pad)
-    lags = compute_lags(mesh, pad)
-    return SHermitianCompact.(approx_cov(Γ, lags))
+function multi_cov(Γ::Kernel, lags)
+    return cov.(Γ, lags)
+end
+function multi_cov(Γ::Union{KernelSdfOnly, AdditiveKernel}, lags)
+    return approx_cov(Γ, lags)
 end
 
 function compute_lags(mesh::CartesianGrid{D,T}, pad) where {D,T}

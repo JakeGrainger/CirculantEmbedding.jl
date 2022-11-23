@@ -20,8 +20,7 @@ struct CirculantPrealloc{T,S,D}
         new{eltype(L), eltype(Y), D}(L,Y)
     end
     function CirculantPrealloc(Γ::Kernel{D,1}, mesh::CartesianGrid{D,T}, pad=0) where {D,T}
-        lags = compute_lags(mesh, pad)
-        C = cov.(Γ, lags)
+        C = cov_at_ft(Γ, mesh, pad)
         A = fft(C)
         L = sqrt.(A)
         Y = Array{ComplexF64}(undef, size(L))

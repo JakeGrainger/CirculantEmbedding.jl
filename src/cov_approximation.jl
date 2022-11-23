@@ -1,5 +1,5 @@
 function approx_cov(Γ::Kernel{D,P}, lags) where {D,P}
-    nfreq = choose_nfreq.(lags)
+    nfreq = choose_nfreq.(lags.iterators)
     Δ = step.(lags.iterators)
     n = length.(lags.iterators)
     freq = fftfreq.(nfreq, 1.0./Δ)

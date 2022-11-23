@@ -6,7 +6,7 @@ function approx_cov(Γ::Kernel{D,P}, lags) where {D,P}
 
     f = aliased_sdf.(Γ, Iterators.product(freq...), Ref(Δ))
     c = FFTView(fft_array(f))
-    return real.(c[CartesianIndices(ntuple(i->-n[i]:n[i]-1,Val{D}()))]) .* prod(step, freq)
+    return fftshift(real.(c[CartesianIndices(ntuple(i->-n[i]:n[i]-1,Val{D}()))]) .* prod(step, freq))
 end
 
 choose_nfreq(lag) = max(length(lag), 2048)

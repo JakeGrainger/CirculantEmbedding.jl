@@ -28,7 +28,7 @@ struct CirculantPrealloc{T,S,D}
     end
 end
 
-function cov_at_ft(Γ::Kernel, mesh, pad=0) where {D}
+function cov_at_ft(Γ::Kernel, mesh, pad=0)
     lags = compute_lags(mesh, pad)
     return multi_cov(Γ, lags)
 end

@@ -42,7 +42,7 @@ function multi_cov(Γ::Union{KernelSdfOnly, AdditiveKernel}, lags)
 end
 
 function compute_lags(mesh::CartesianGrid{D,T}, pad) where {D,T}
-    n, Δ = mesh.dims, mesh.spacing
+    n, Δ = mesh.topology.dims, mesh.spacing
     m = ntuple(d -> choose_circ_m(n[d], pad), Val{D}())
     Iterators.product(ntuple(d -> fftfreq(m[d],m[d]*Δ[d]), Val{D}())...)
 end

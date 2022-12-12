@@ -3,6 +3,11 @@ struct GaussianProcess{D,P,T<:Real,G<:Mesh{D,T},S}
     mesh::G
     sim_prealloc::S
 end
+"""
+    GaussianProcess(Γ::Kernel, mesh::Mesh; pad=0)
+
+Construct a Gaussian process with kernel `Γ` on a mesh `mesh`.
+"""
 GaussianProcess(Γ::Kernel, mesh::Mesh; pad=0) = GaussianProcess(Γ, mesh, preallocate_gp_simulation(Γ, mesh, pad))
 
 preallocate_gp_simulation(Γ::Kernel, mesh::Mesh, pad) = error("Simulation only currently implemented on a regular grid.")
@@ -41,12 +46,22 @@ function multi_cov(Γ::Union{KernelSdfOnly, AdditiveKernel}, lags)
     return approx_cov(Γ, lags)
 end
 
+"""
+    compute_lags(mesh::CartesianGrid{D,T}, pad) where {D,T}
+
+Compute lags required for circulant embedding on a given mesh.
+"""
 function compute_lags(mesh::CartesianGrid{D,T}, pad) where {D,T}
     n, Δ = mesh.topology.dims, mesh.spacing
     m = ntuple(d -> choose_circ_m(n[d], pad), Val{D}())
     Iterators.product(ntuple(d -> fftfreq(m[d],m[d]*Δ[d]), Val{D}())...)
 end
 
+"""
+    choose_circ_m(n::Int, pad)
+
+Choose the `m` used in circulant embedding.
+"""
 function choose_circ_m(n::Int, pad)
     return 2n-2+pad
 end

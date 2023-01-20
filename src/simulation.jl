@@ -1,4 +1,6 @@
-struct GaussianProcess{D,P,T<:Real,G<:Mesh{D,T},S}
+abstract type RandomField{D,P} end
+
+struct GaussianProcess{D,P,T<:Real,G<:Mesh{D,T},S} <: RandomField{D,P}
     Γ::Kernel{D,P}
     mesh::G
     sim_prealloc::S

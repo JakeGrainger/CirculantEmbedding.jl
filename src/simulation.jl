@@ -74,7 +74,7 @@ function choose_circ_m(n::Int, pad)
     return 2n-2+pad
 end
 
-function rand(gp::GaussianProcess{D,P,T,CartesianGrid{D,T},S}) where {D,P,T,S}
+function rand(gp::GaussianProcess{M,D,P,T,CartesianGrid{D,T},S}) where {M,D,P,T,S}
     for i in eachindex(gp.sim_prealloc.L,gp.sim_prealloc.Y)
         Z = SVector{P,complex(T)}(complex(rand(Normal(0,1)), rand(Normal(0,1))) for i in 1:P)
         gp.sim_prealloc.Y[i] = gp.sim_prealloc.L[i].L * Z
@@ -82,7 +82,7 @@ function rand(gp::GaussianProcess{D,P,T,CartesianGrid{D,T},S}) where {D,P,T,S}
     W = fft_array(gp.sim_prealloc.Y) / sqrt(length(gp.sim_prealloc.Y))
     return gp.mean .+ real.(W[CartesianIndices(size(gp.mesh))])#, imag.(W[CartesianIndices(size(gp.mesh))])
 end
-function rand(gp::GaussianProcess{D,1,T,CartesianGrid{D,T},S}) where {D,T,S}
+function rand(gp::GaussianProcess{M,D,1,T,CartesianGrid{D,T},S}) where {M,D,T,S}
     for i in eachindex(gp.sim_prealloc.L,gp.sim_prealloc.Y)
         Z = complex(rand(Normal(0,1)), rand(Normal(0,1)))
         gp.sim_prealloc.Y[i] = gp.sim_prealloc.L[i] * Z

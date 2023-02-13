@@ -11,7 +11,7 @@ end
 
 Construct a Gaussian process with kernel `Γ` on a mesh `mesh`.
 """
-GaussianProcess(mean, Γ::Kernel, mesh::Mesh; pad=0) = GaussianProcess(mean, Γ, mesh, preallocate_gp_simulation(Γ, mesh, pad))
+GaussianProcess(mean::Real, Γ::Kernel, mesh::Mesh; pad=0) = GaussianProcess(mean, Γ, mesh, preallocate_gp_simulation(Γ, mesh, pad))
 GaussianProcess(Γ::Kernel, mesh::Mesh; pad=0) = GaussianProcess(0.0, Γ, mesh; pad=pad)
 
 Distributions.mean(g::GaussianProcess) = g.mean

@@ -14,6 +14,10 @@ Construct a Gaussian process with kernel `Γ` on a mesh `mesh`.
 GaussianProcess(mean, Γ::Kernel, mesh::Mesh; pad=0) = GaussianProcess(mean, Γ, mesh, preallocate_gp_simulation(Γ, mesh, pad))
 GaussianProcess(Γ::Kernel, mesh::Mesh; pad=0) = GaussianProcess(0.0, Γ, mesh; pad=pad)
 
+Distributions.mean(g::GaussianProcess) = g.mean
+Distributions.var(g::GaussianProcess) = Distributions.var(g.Γ)
+Distributions.cov(g::GaussianProcess, h) = Distributions.cov(g.Γ, h)
+
 preallocate_gp_simulation(Γ::Kernel, mesh::Mesh, pad) = error("Simulation only currently implemented on a regular grid.")
 preallocate_gp_simulation(Γ::Kernel{D,P}, mesh::CartesianGrid{D,T}, pad) where {D,P,T} = CirculantPrealloc(Γ, mesh, pad)
 preallocate_gp_simulation(Γ::Kernel{D,P}, mesh::CartesianGrid{D2,T}, pad) where {D,D2,P,T} = error("Kernel has different dimension to grid.")

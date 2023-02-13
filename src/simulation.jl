@@ -1,16 +1,18 @@
 abstract type RandomField{D,P} end
 
-struct GaussianProcess{D,P,T<:Real,G<:Mesh{D,T},S} <: RandomField{D,P}
+struct GaussianProcess{M<:Real,D,P,T<:Real,G<:Mesh{D,T},S} <: RandomField{D,P}
+    mean::M
     Γ::Kernel{D,P}
     mesh::G
     sim_prealloc::S
 end
 """
-    GaussianProcess(Γ::Kernel, mesh::Mesh; pad=0)
+    GaussianProcess(mean, Γ::Kernel, mesh::Mesh; pad=0)
 
 Construct a Gaussian process with kernel `Γ` on a mesh `mesh`.
 """
-GaussianProcess(Γ::Kernel, mesh::Mesh; pad=0) = GaussianProcess(Γ, mesh, preallocate_gp_simulation(Γ, mesh, pad))
+GaussianProcess(mean, Γ::Kernel, mesh::Mesh; pad=0) = GaussianProcess(mean, Γ, mesh, preallocate_gp_simulation(Γ, mesh, pad))
+GaussianProcess(Γ::Kernel, mesh::Mesh; pad=0) = GaussianProcess(0.0, Γ, mesh; pad=pad)
 
 preallocate_gp_simulation(Γ::Kernel, mesh::Mesh, pad) = error("Simulation only currently implemented on a regular grid.")
 preallocate_gp_simulation(Γ::Kernel{D,P}, mesh::CartesianGrid{D,T}, pad) where {D,P,T} = CirculantPrealloc(Γ, mesh, pad)
@@ -74,7 +76,7 @@ function rand(gp::GaussianProcess{D,P,T,CartesianGrid{D,T},S}) where {D,P,T,S}
         gp.sim_prealloc.Y[i] = gp.sim_prealloc.L[i].L * Z
     end
     W = fft_array(gp.sim_prealloc.Y) / sqrt(length(gp.sim_prealloc.Y))
-    return real.(W[CartesianIndices(size(gp.mesh))])#, imag.(W[CartesianIndices(size(gp.mesh))])
+    return gp.mean .+ real.(W[CartesianIndices(size(gp.mesh))])#, imag.(W[CartesianIndices(size(gp.mesh))])
 end
 function rand(gp::GaussianProcess{D,1,T,CartesianGrid{D,T},S}) where {D,T,S}
     for i in eachindex(gp.sim_prealloc.L,gp.sim_prealloc.Y)
@@ -82,5 +84,5 @@ function rand(gp::GaussianProcess{D,1,T,CartesianGrid{D,T},S}) where {D,T,S}
         gp.sim_prealloc.Y[i] = gp.sim_prealloc.L[i] * Z
     end
     W = fft_array(gp.sim_prealloc.Y) / sqrt(length(gp.sim_prealloc.Y))
-    return real.(W[CartesianIndices(size(gp.mesh))])#, imag.(W[CartesianIndices(size(gp.mesh))])
+    return gp.mean .+ real.(W[CartesianIndices(size(gp.mesh))])#, imag.(W[CartesianIndices(size(gp.mesh))])
 end

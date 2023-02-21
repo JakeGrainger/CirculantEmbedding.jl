@@ -11,5 +11,5 @@ module CirculantEmbedding
     include("fft_array.jl")
     include("cov_approximation.jl")
 
-    export GaussianProcess, Matern, OscillatoryMatern, sdf, approx_cov
+    export GaussianProcess, Matern, OscillatoryMatern, sdf, approx_cov, IndependentFields, LagZeroFilter, FilteredRandomField, getmesh
 end

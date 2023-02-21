@@ -30,6 +30,7 @@ struct CirculantPrealloc{T,S,D}
         A = fft_array(C)
         L = cholesky.(A)
         Y = Array{SVector{P,ComplexF64},D}(undef, size(L))
+        all(x->!isnan(sum(x)), L) || error("Some NaNs found, check parameters.")
         new{eltype(L), eltype(Y), D}(L,Y)
     end
     function CirculantPrealloc(Γ::Kernel{D,1}, mesh::CartesianGrid{D,T}, pad=0) where {D,T}
@@ -37,6 +38,7 @@ struct CirculantPrealloc{T,S,D}
         A = fft(C)
         L = sqrt.(A)
         Y = Array{ComplexF64,D}(undef, size(L))
+        all(!isnan, L) || error("Some NaNs found, check parameters.")
         new{eltype(L), eltype(Y), D}(L,Y)
     end
 end

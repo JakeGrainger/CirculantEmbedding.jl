@@ -3,12 +3,8 @@ struct FilteredRandomField{D,P,Q,L<:RandomField{D,Q},T<:LinearFilter{Q,P,Float64
     transform::T
 end
 
-function rand(f::FilteredRandomField, show_latent=true)
+function rand(f::FilteredRandomField)
     latent_fields = rand(f.latent)
     output_fields = f.transform.(latent_fields)
-    if show_latent
-        return (rf = output_fields, latent = latent_fields)
-    else
-        return output_fields
-    end
+    return (rf = output_fields, latent = latent_fields)
 end

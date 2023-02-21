@@ -4,7 +4,10 @@ struct IndependentFields{D,P,T<:NTuple{P,<:RandomField{D,1}}} <: RandomField{D,P
     fields::T
 end
 
-rand(f::IndependentFields) = rand.(f.fields)
+function rand(f::IndependentFields{D,P,T}) where {D,P,T}
+    X = rand.(f.fields)
+    return [SVector{P,Float64}(X[p][ind] for p in 1:P) for ind in eachindex(X...)]
+end
 
 Distributions.mean(f::IndependentFields{D,P}) where {D,P} = mean.(f.fields)
 Distributions.cov(f::IndependentFields{D,P}, lag) where {D,P} = SMatrix{P,P,Float64,P*P}(i==j ? cov(f.fields[i],lag) : 0.0 for i in 1:P, j in 1:P)

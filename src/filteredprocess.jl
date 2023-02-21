@@ -3,7 +3,7 @@ struct FilteredRandomField{D,P,Q,L<:RandomField{D,Q},T<:LinearFilter{Q,P,Float64
     transform::T
 end
 
-function rand(f::FilteredRandomField, show_latent=false)
+function rand(f::FilteredRandomField, show_latent=true)
     latent_fields = rand(f.latent)
     output_fields = f.transform.(latent_fields)
     if show_latent

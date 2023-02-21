@@ -4,7 +4,7 @@ module CirculantEmbedding
     import Base: rand
 
     include("kernels.jl")
-    include("simulation.jl")
+    include("gaussianprocess.jl")
     include("fft_array.jl")
     include("cov_approximation.jl")
 

@@ -29,14 +29,14 @@ struct CirculantPrealloc{T,S,D}
         C = SHermitianCompact.(cov_at_ft(Γ, mesh, pad)) # strictly not symmetric, but doesn't change the algorithm as result of fft will be hermitian symm.
         A = fft_array(C)
         L = cholesky.(A)
-        Y = Array{SVector{P,ComplexF64}}(undef, size(L))
+        Y = Array{SVector{P,ComplexF64},D}(undef, size(L))
         new{eltype(L), eltype(Y), D}(L,Y)
     end
     function CirculantPrealloc(Γ::Kernel{D,1}, mesh::CartesianGrid{D,T}, pad=0) where {D,T}
         C = cov_at_ft(Γ, mesh, pad)
         A = fft(C)
         L = sqrt.(A)
-        Y = Array{ComplexF64}(undef, size(L))
+        Y = Array{ComplexF64,D}(undef, size(L))
         new{eltype(L), eltype(Y), D}(L,Y)
     end
 end

@@ -6,7 +6,8 @@ end
 
 function rand(f::IndependentFields{D,P,T}) where {D,P,T}
     X = rand.(f.fields)
-    return [SVector{P,Float64}(X[p][ind] for p in 1:P) for ind in eachindex(X...)]
+    @asset all(x->size(x)==size(X[1]), X)
+    return [SVector{P,Float64}(X[p][ind] for p in 1:P) for ind in CartesianIndex(X[1])]
 end
 
 Distributions.mean(f::IndependentFields{D,P}) where {D,P} = mean.(f.fields)

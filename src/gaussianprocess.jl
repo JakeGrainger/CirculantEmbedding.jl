@@ -1,5 +1,3 @@
-abstract type RandomField{D,P} end
-
 struct GaussianProcess{M<:Real,D,P,T<:Real,G<:Mesh{D,T},S} <: RandomField{D,P}
     mean::M
     Γ::Kernel{D,P}

@@ -8,3 +8,5 @@ function rand(f::FilteredRandomField)
     output_fields = f.transform.(latent_fields)
     return (rf = output_fields, latent = latent_fields)
 end
+
+getmesh(f::FilteredRandomField) = getmesh(f.latent)

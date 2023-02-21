@@ -15,6 +15,7 @@ GaussianProcess(Γ::Kernel, mesh::Mesh; pad=0) = GaussianProcess(0.0, Γ, mesh; 
 Distributions.mean(g::GaussianProcess) = g.mean
 Distributions.var(g::GaussianProcess) = Distributions.var(g.Γ)
 Distributions.cov(g::GaussianProcess, h) = Distributions.cov(g.Γ, h)
+sdf(g::GaussianProcess, freq) = sdf(g.kernel, freq)
 
 preallocate_gp_simulation(Γ::Kernel, mesh::Mesh, pad) = error("Simulation only currently implemented on a regular grid.")
 preallocate_gp_simulation(Γ::Kernel{D,P}, mesh::CartesianGrid{D,T}, pad) where {D,P,T} = CirculantPrealloc(Γ, mesh, pad)

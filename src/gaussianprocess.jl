@@ -1,5 +1,5 @@
 struct GaussianProcess{M<:Real,D,P,T<:Real,G<:Mesh{D,T},S} <: RandomField{D,P}
-    mean::M
+    mean::SVector{P,M}
     Γ::Kernel{D,P}
     mesh::G
     sim_prealloc::S
@@ -9,7 +9,8 @@ end
 
 Construct a Gaussian process with kernel `Γ` on a mesh `mesh`.
 """
-GaussianProcess(mean::Real, Γ::Kernel, mesh::Mesh; pad=0) = GaussianProcess(mean, Γ, mesh, preallocate_gp_simulation(Γ, mesh, pad))
+GaussianProcess(μ::SVector{P,M}, Γ::Kernel{D,P}, mesh::Mesh; pad=0) where {D,P,M} = GaussianProcess(μ, Γ, mesh, preallocate_gp_simulation(Γ, mesh, pad))
+GaussianProcess(μ::M, Γ::Kernel{D,P}, mesh::Mesh; pad=0) where {D,P,M<:Real} = GaussianProcess(SVector{P,M}(ntuple(d->μ, Val{P}())), Γ, mesh; pad=pad)
 GaussianProcess(Γ::Kernel, mesh::Mesh; pad=0) = GaussianProcess(0.0, Γ, mesh; pad=pad)
 
 getmesh(g::GaussianProcess) = g.mesh
@@ -90,5 +91,5 @@ function rand(gp::GaussianProcess{M,D,1,T,CartesianGrid{D,T},S}) where {M,D,T,S}
         gp.sim_prealloc.Y[i] = gp.sim_prealloc.L[i] * Z
     end
     W = fft_array(gp.sim_prealloc.Y) / sqrt(length(gp.sim_prealloc.Y))
-    return gp.mean .+ real.(W[CartesianIndices(size(gp.mesh))])#, imag.(W[CartesianIndices(size(gp.mesh))])
+    return gp.mean[1] .+ real.(W[CartesianIndices(size(gp.mesh))])#, imag.(W[CartesianIndices(size(gp.mesh))])
 end

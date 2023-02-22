@@ -14,7 +14,7 @@ function rand(f::IndependentFields{D,P,T}) where {D,P,T}
     return [SVector{P,Float64}(X[p][ind] for p in 1:P) for ind in CartesianIndices(X[1])]
 end
 
-Distributions.mean(f::IndependentFields{D,P,T}) where {D,P,T} = mean.(f.fields)
+Distributions.mean(f::IndependentFields{D,P,T}) where {D,P,T} = SVector(getindex.(mean.(f.fields),1))
 Distributions.cov(f::IndependentFields{D,P,T}, lag) where {D,P,T} = SMatrix{P,P,Float64,P*P}(i==j ? cov(f.fields[i],lag) : 0.0 for i in 1:P, j in 1:P)
 Distributions.var(f::IndependentFields{D,P,T}) where {D,P,T} = SMatrix{P,P,Float64,P*P}(i==j ? var(f.fields[i]) : 0.0 for i in 1:P, j in 1:P)
-sdf(f::IndependentFields{D,P,T},freq) where {D,P} = SMatrix{P,P,ComplexF16,P*P}(i==j ? sdf(f.fields[i],freq) : 0.0 for i in 1:P, j in 1:P)
+sdf(f::IndependentFields{D,P,T},freq) where {D,P,T} = SMatrix{P,P,ComplexF64,P*P}(i==j ? sdf(f.fields[i],freq) : 0.0 for i in 1:P, j in 1:P)

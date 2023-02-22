@@ -9,8 +9,8 @@ struct LagZeroFilter{Q,P,T,L} <: LinearFilter{Q,P,T}
     A::SMatrix{P,Q,T,L}
 end
 
-function (f::LagZeroFilter{Q,P,T,L})(x::Array{SVector{Q,S},D}) where {D,Q,P,T,L,S}
-    return f.A .* x
+function (f::LagZeroFilter{Q,P,T,L})(X::Array{SVector{Q,S},D}) where {D,Q,P,T,L,S}
+    return map(x->f.A*x, X)
 end
 
 transferfunction(f::LagZeroFilter, freq) = f.A

@@ -1,5 +1,5 @@
 using CirculantEmbedding
-import CirculantEmbedding.StaticArrays: SVector, SMatrix
+import CirculantEmbedding.StaticArrays: SVector, SMatrix, @SMatrix
 import CirculantEmbedding.Distributions: var, cov, mean
 import CirculantEmbedding.Meshes: CartesianGrid
 using Test
@@ -16,5 +16,17 @@ using Test
         @test var(gp) == SMatrix{2,2,Float64,4}(1.0, 0, 0, 1)
         @test cov(gp,(1.0,0.0)) isa SMatrix{2,2,Float64,4}
         @test sdf(gp,(1.0,1.0)) isa SMatrix{2,2,ComplexF64,4}
+
+        A = @SMatrix [
+            0.5 0.5
+            0.0 0.5
+        ]
+
+        gp_filtered = FilteredRandomField(gp, LagZeroFilter(A))
+        @test rand(gp_filtered).rf isa Matrix{SVector{2,Float64}}
+        @test mean(gp_filtered) == SVector{2,Float64}(0.0,0.0)
+        @test var(gp_filtered) == A*A'
+        @test cov(gp_filtered,(1.0,0.0)) isa SMatrix{2,2,Float64,4}
+        @test sdf(gp_filtered,(1.0,1.0)) isa SMatrix{2,2,ComplexF64,4}
     end
 end

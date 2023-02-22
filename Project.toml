@@ -1,7 +1,7 @@
 name = "CirculantEmbedding"
 uuid = "6450ef71-fe03-48a6-8fe3-d8c8a50f9532"
 authors = ["Jake Grainger"]
-version = "0.0.18"
+version = "0.0.19"
 
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"

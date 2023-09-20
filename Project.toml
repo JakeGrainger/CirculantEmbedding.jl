@@ -1,7 +1,7 @@
 name = "CirculantEmbedding"
 uuid = "6450ef71-fe03-48a6-8fe3-d8c8a50f9532"
 authors = ["Jake Grainger"]
-version = "0.0.19"
+version = "0.0.20"
 
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
@@ -14,7 +14,7 @@ StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 
 [compat]
 julia = "1.8"
-Meshes = "0.26.1"
+Meshes = "0.35"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
